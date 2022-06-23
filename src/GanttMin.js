@@ -83,12 +83,12 @@ function assignTask(tasks, programmers) {
 
 function reworkTask(tasks, skill, task, prob) {
   const totalTask = tasks.filter((t) => {
-    return t.status == skill && t.task == task;
+    return t.status === skill && t.task === task;
   });
 
   const rework = Math.ceil(totalTask.length * prob);
   return [...Array(rework).keys()].map((item) =>
-    task == "New Feature" ? 0 : 1
+    task === "New Feature" ? 0 : 1
   );
 }
 
@@ -114,10 +114,10 @@ function workDay(start, duration) {
 function generateTask() {
   const programmers = [...getProgrammers(TOTAL_PROGRAMMER)];
   const seniorProgrammers = programmers.filter(
-    (programmer) => programmer.status == "senior"
+    (programmer) => programmer.status === "senior"
   );
   const juniorProgrammers = programmers.filter(
-    (programmer) => programmer.status == "junior"
+    (programmer) => programmer.status === "junior"
   );
   const tasks = getTaskProb(TOTAL_SCR);
   let coreTask = assignTask(tasks, programmers);
@@ -160,6 +160,7 @@ function generateTask() {
   let i = 0;
   for (const [key, value] of Object.entries(coreTask)) {
     let start = moment(startDate, format).add(9, "hours");
+    // eslint-disable-next-line no-loop-func
     const timeline = value.map((val) => {
       const hours = val.duration;
       const work = workDay(start, val.duration);
@@ -177,7 +178,7 @@ function generateTask() {
         start_f: work.start.format("YYYY/MM/DD H:mm"),
         end_f: work.end.format("YYYY/MM/DD H:mm"),
         hours,
-        duration: duration == 0 ? 1 : duration,
+        duration: duration === 0 ? 1 : duration,
       };
       start = work.end;
       i++;

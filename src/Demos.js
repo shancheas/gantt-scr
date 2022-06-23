@@ -31,6 +31,7 @@ skins.forEach((a) => (skinSettings[a.id] = a.settings));
 
 const demos = [["/base", "Gantt basic", GanttMin]];
 
+// eslint-disable-next-line no-unused-vars
 const FormInput = () => {
   const [form] = Form.useForm();
 
@@ -51,26 +52,19 @@ const FormInput = () => {
 
 function Routes({ history }) {
   const [skin, setSkin] = useState({});
-  const [page, setPage] = useState({});
-  const [show, setShow] = useState(false);
-  const [title, setTitle] = useState("");
 
   let location = useLocation();
   useEffect(() => {
     const parts = location.pathname.split("/");
     if (parts.length === 3) {
-      setPage(parts[1]);
       setSkin(parts[2]);
-      setTitle(demos.find((a) => a[0] === "/" + parts[1])[1]);
     }
   }, [location]);
 
   return (
     <Router>
       <div className={css.layout}>
-        <div
-          className={classes(css.content, { [css.move]: show }, "wx-" + skin)}
-        >
+        <div className={classes(css.content, "wx-" + skin)}>
           {/* <FormInput /> */}
           <Switch>
             <Route
