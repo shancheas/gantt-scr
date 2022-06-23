@@ -71,7 +71,7 @@ function Routes({ history }) {
         <div
           className={classes(css.content, { [css.move]: show }, "wx-" + skin)}
         >
-          <FormInput />
+          {/* <FormInput /> */}
           <Switch>
             <Route
               exact
