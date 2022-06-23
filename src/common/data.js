@@ -73,10 +73,16 @@ export function getData(prefix, maxSize, maxYears) {
   ];
 
   const columns = [
-    { name: "text", label: "Task name", width: "100%" },
-    { name: "start", label: "Start time", align: "center" },
-    { name: "duration", label: "Duration", width: "70px", align: "center" },
-    { name: "add-task", label: "", width: "50px", align: "center" },
+    { name: "text", label: "Task name", width: "150px" },
+    { name: "name", label: "Assignee", width: "150px" },
+    { name: "status", label: "Skill", width: "70px", align: "center" },
+    { name: "start_f", label: "Start time" },
+    { name: "end_f", label: "End time" },
+    // { name: "start_date", label: "Start time", align: "center" },
+    // { name: "end_date", label: "End time", align: "center" },
+    // { name: "duration", label: "Duration", width: "70px", align: "center" },
+    { name: "hours", label: "Duration", width: "70px", align: "center" },
+    // { name: "add-task", label: "", width: "50px", align: "center" },
   ];
 
   return { tasks, links, scales, columns };
