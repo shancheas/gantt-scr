@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button, Form } from "antd";
 import {
   HashRouter as Router,
   Switch,
@@ -31,25 +30,6 @@ skins.forEach((a) => (skinSettings[a.id] = a.settings));
 
 const demos = [["/base", "Gantt basic", GanttMin]];
 
-// eslint-disable-next-line no-unused-vars
-const FormInput = () => {
-  const [form] = Form.useForm();
-
-  return (
-    <Form layout={"horizontal"} form={form}>
-      <Form.Item label="Total Task">
-        <Input placeholder="input placeholder" />
-      </Form.Item>
-      <Form.Item label="Total Programmer">
-        <Input placeholder="input placeholder" />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary">Submit</Button>
-      </Form.Item>
-    </Form>
-  );
-};
-
 function Routes({ history }) {
   const [skin, setSkin] = useState({});
 
@@ -65,7 +45,6 @@ function Routes({ history }) {
     <Router>
       <div className={css.layout}>
         <div className={classes(css.content, "wx-" + skin)}>
-          {/* <FormInput /> */}
           <Switch>
             <Route
               exact
