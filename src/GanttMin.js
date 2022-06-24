@@ -79,7 +79,12 @@ export default function GanttMin({ cellHeight, borders }) {
                   {programmerSummary.map((programmer) => {
                     return (
                       <Col span={8} key={programmer.name}>
-                        <Descriptions bordered column={1} size="small">
+                        <Descriptions
+                          bordered
+                          column={1}
+                          size="small"
+                          style={{ "margin-bottom": 20 }}
+                        >
                           <Descriptions.Item label="Name">
                             {programmer.name}
                           </Descriptions.Item>
