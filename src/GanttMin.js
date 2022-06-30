@@ -21,6 +21,15 @@ export default function GanttMin({ cellHeight, borders }) {
     setProgrammer(summaryWorker);
   }
 
+  function hoursToMonth(hours) {
+    const dayInMonth = 21;
+    const days = hours / 8;
+
+    return days > dayInMonth
+      ? `${(days / dayInMonth).toFixed(2)} months`
+      : `${Math.ceil(days)} days`;
+  }
+
   return (
     <>
       <FormInput onGenerate={onGenerate} />
@@ -44,7 +53,7 @@ export default function GanttMin({ cellHeight, borders }) {
                   <Descriptions.Item label="Duration">
                     {projectSummary.duration.toLocaleString()} days
                   </Descriptions.Item>
-                  <Descriptions.Item label="Total Task">
+                  <Descriptions.Item label="Total SCR">
                     {projectSummary.totalTask.toLocaleString()} Tasks
                   </Descriptions.Item>
                   <Descriptions.Item label="Total Hours">
@@ -83,7 +92,7 @@ export default function GanttMin({ cellHeight, borders }) {
                           bordered
                           column={1}
                           size="small"
-                          style={{ "margin-bottom": 20 }}
+                          style={{ marginBottom: 20 }}
                         >
                           <Descriptions.Item label="Name">
                             {programmer.name}
@@ -100,11 +109,18 @@ export default function GanttMin({ cellHeight, borders }) {
                           <Descriptions.Item label="Rate">
                             Rp. {programmer.rate.toLocaleString()} / hours
                           </Descriptions.Item>
-                          <Descriptions.Item label="Total Hours">
-                            {programmer.hours.toLocaleString()} hours
-                          </Descriptions.Item>
                           <Descriptions.Item label="Total Task">
-                            {programmer.totalTask.toLocaleString()} Tasks
+                            {programmer.totalTask.toLocaleString()} Tasks (
+                            {programmer.totalTask - programmer.totalRework}{" "}
+                            core, {programmer.totalRework} rework)
+                          </Descriptions.Item>
+                          <Descriptions.Item label="Total Core Task Hours">
+                            {programmer.hours.toLocaleString()} hours (
+                            {hoursToMonth(programmer.hours)})
+                          </Descriptions.Item>
+                          <Descriptions.Item label="Total Rework Task Hours">
+                            {programmer.hoursRework.toLocaleString()} hours (
+                            {hoursToMonth(programmer.hoursRework)})
                           </Descriptions.Item>
                           <Descriptions.Item label="Total Salary">
                             Rp. {programmer.salary.toLocaleString()}

@@ -42,7 +42,7 @@ export const FormInput = ({ onGenerate }) => {
         <Card>
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name="totalTask" label="Total Task">
+              <Form.Item name="totalTask" label="Total SCR">
                 <InputNumber
                   placeholder="input placeholder"
                   style={{ width: "100%" }}

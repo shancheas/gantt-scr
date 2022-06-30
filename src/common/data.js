@@ -73,6 +73,7 @@ export function getData(prefix, maxSize, maxYears) {
   ];
 
   const columns = [
+    { name: "id", label: "No.", width: "30px" },
     { name: "text", label: "Task name", width: "150px" },
     { name: "name", label: "Assignee", width: "150px" },
     { name: "status", label: "Skill", width: "70px", align: "center" },

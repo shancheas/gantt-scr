@@ -29,13 +29,15 @@ function getTaskProb(totalTask) {
   return [...Array(totalTask).keys()].map((item) => randomInteger(0, 1));
 }
 
-function assignTask(tasks, programmers) {
+function assignTask(tasks, programmers, rework = false) {
   const taskName = ["New Feature", "Modify Feature"];
+  const affix = rework ? "(rework)" : "";
   return tasks.map((task) => {
     const programmerId = getAssignee(programmers.length);
     const programmer = programmers[programmerId];
     return {
-      task: taskName[task],
+      task: `${taskName[task]}${affix}`,
+      rework,
       ...programmer,
     };
   });
@@ -56,20 +58,32 @@ function totalTask(tasks) {
   const newFeature = tasks.filter((task) => task.text === "New Feature");
   const modifyFeature = tasks.filter((task) => task.text === "Modify Feature");
 
-  return { newFeature, modifyFeature };
+  const newFeatureRework = tasks.filter(
+    (task) => task.text === "New Feature(rework)"
+  );
+  const modifyFeatureRework = tasks.filter(
+    (task) => task.text === "Modify Feature(rework)"
+  );
+
+  return { newFeature, modifyFeature, newFeatureRework, modifyFeatureRework };
 }
 
 function summaryProgrammer(tasks) {
   const start = tasks[0];
   const end = tasks.slice(-1)[0];
-  const { newFeature, modifyFeature } = totalTask(tasks);
+  const { newFeature, modifyFeature, newFeatureRework, modifyFeatureRework } =
+    totalTask(tasks);
+  const totalRework = newFeatureRework.length + modifyFeatureRework.length;
 
   const name = start.name;
   const status = start.status;
   const salary = tasks.reduce((a, b) => {
     return a + b.salary;
   }, 0);
-  const hours = tasks.reduce((a, b) => {
+  const hours = tasks.slice(totalRework).reduce((a, b) => {
+    return a + b.hours;
+  }, 0);
+  const hoursRework = tasks.slice(-totalRework).reduce((a, b) => {
     return a + b.hours;
   }, 0);
 
@@ -80,10 +94,14 @@ function summaryProgrammer(tasks) {
     end: end.end,
     rate: start.rate,
     hours,
+    hoursRework,
     salary,
     totalTask: tasks.length,
+    totalRework,
     newFeature: newFeature.length,
     modifyFeature: modifyFeature.length,
+    newFeatureRework: newFeatureRework.length,
+    modifyFeatureRework: modifyFeatureRework.length,
   };
 }
 
@@ -180,6 +198,14 @@ export function generateTask(params) {
       senior: dms,
       junior: dmj,
     },
+    "New Feature(rework)": {
+      senior: dns,
+      junior: dnj,
+    },
+    "Modify Feature(rework)": {
+      senior: dms,
+      junior: dmj,
+    },
   };
   const programmers = [...getProgrammers(totalProgrammer, skills)];
   const seniorProgrammers = programmers.filter(
@@ -194,25 +220,29 @@ export function generateTask(params) {
   coreTask.push(
     ...assignTask(
       reworkTask(coreTask, "junior", "New Feature", rnj),
-      juniorProgrammers
+      juniorProgrammers,
+      true
     )
   );
   coreTask.push(
     ...assignTask(
       reworkTask(coreTask, "junior", "Modify Feature", rmj),
-      juniorProgrammers
+      juniorProgrammers,
+      true
     )
   );
   coreTask.push(
     ...assignTask(
       reworkTask(coreTask, "senior", "New Feature", rns),
-      seniorProgrammers
+      seniorProgrammers,
+      true
     )
   );
   coreTask.push(
     ...assignTask(
       reworkTask(coreTask, "senior", "Modify Feature", rms),
-      seniorProgrammers
+      seniorProgrammers,
+      true
     )
   );
 
@@ -227,7 +257,7 @@ export function generateTask(params) {
   coreTask = _.groupBy(coreTask, "name");
   const gantt = [];
   const summaryWorker = [];
-  let i = 0;
+  let i = 1;
   for (const [key, value] of Object.entries(coreTask)) {
     let start = startDate.add(9, "hours");
     // eslint-disable-next-line no-loop-func
