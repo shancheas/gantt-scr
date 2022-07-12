@@ -14,6 +14,17 @@ const dmj = 9;
 const rmj = 0.25;
 const rnj = 0.4;
 
+const arrivalA = 21;
+const arrivalC = 5;
+const arrivalM = 8;
+
+const taskA = 9;
+const taskC = 7;
+const taskM = 64;
+
+const threshold = 0.6;
+const taskTimeTolerance = 2;
+
 export const FormInput = ({ onGenerate }) => {
   const [form] = Form.useForm();
 
@@ -36,6 +47,14 @@ export const FormInput = ({ onGenerate }) => {
           dmj,
           rnj,
           rmj,
+          arrivalA,
+          arrivalC,
+          arrivalM,
+          taskA,
+          taskC,
+          taskM,
+          threshold,
+          taskTimeTolerance,
         }}
         // wrapperCol={{ span: 14 }}
       >
@@ -56,6 +75,12 @@ export const FormInput = ({ onGenerate }) => {
               </Form.Item>
               <Form.Item name="startDate" label="Start Date">
                 <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+              <Form.Item name="duration" label="Rencana Durasi Projek">
+                <InputNumber
+                  placeholder="dalam bulan"
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -104,6 +129,58 @@ export const FormInput = ({ onGenerate }) => {
                 />
               </Form.Item>
               <Form.Item name="rmj" label="Rework Modif Junior (Pmj)">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="arrivalA" label="Arrival A">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item name="arrivalC" label="Arrival C">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item name="arrivalM" label="Arrival M">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item name="threshold" label="Threshold">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="taskA" label="Task A">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item name="taskC" label="Task C">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item name="taskM" label="Task M">
+                <InputNumber
+                  placeholder="input placeholder"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+              <Form.Item name="taskTimeTolerance" label="Task Tolerance">
                 <InputNumber
                   placeholder="input placeholder"
                   style={{ width: "100%" }}

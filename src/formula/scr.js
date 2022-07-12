@@ -2,10 +2,50 @@ import { faker } from "@faker-js/faker";
 
 import * as _ from "lodash";
 import moment from "moment";
+import {
+  distribution,
+  taskDistribution,
+  arrival,
+} from "../formula/distribution";
 faker.setLocale("id_ID");
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function getTaskDistribution(totalTask, a, c, m, threshold) {
+  return distribution({
+    a,
+    c,
+    m,
+    totalTask,
+    func: taskDistribution,
+    threshold,
+  });
+}
+
+export function getArrivalDistribution(totalTask, a, c, m) {
+  return distribution({
+    a,
+    c,
+    m,
+    totalTask,
+    func: arrival,
+  });
+}
+
+function getDistribution(totalTask, a, c, m, threshold) {
+  return getTaskDistribution(totalTask, a, c, m, threshold).map(
+    (dist) => dist.value - 1
+  );
+}
+
+function randomDecimal(min, max) {
+  return Math.random() * (max - min + 1) + min;
+}
+
+function getConstantRange(num, range = 2) {
+  return randomDecimal(num - range, num + range);
 }
 
 function getProgrammers(total, skills) {
@@ -21,20 +61,30 @@ function getProgrammers(total, skills) {
   return programmers;
 }
 
-function getAssignee(totalProgrammer) {
-  return randomInteger(0, totalProgrammer - 1);
+function getAssignee(dist, programmers, totalTask, index) {
+  const seniorProgrammers = programmers.filter(
+    (programmer) => programmer.status === "senior"
+  );
+  const juniorProgrammers = programmers.filter(
+    (programmer) => programmer.status === "junior"
+  );
+
+  const rework = juniorProgrammers.length < 1 || seniorProgrammers.length < 1;
+
+  const rand = _.sampleSize(dist, totalTask);
+  const programmer = rand[index] ? juniorProgrammers : seniorProgrammers;
+  return rework ? _.sample(programmers) : _.sample(programmer);
 }
 
-function getTaskProb(totalTask) {
-  return [...Array(totalTask).keys()].map((item) => randomInteger(0, 1));
+function getTaskProb(totalTask, a, c, m, threshold) {
+  return getDistribution(totalTask, a, c, m, threshold);
 }
 
 function assignTask(tasks, programmers, rework = false) {
   const taskName = ["New Feature", "Modify Feature"];
   const affix = rework ? "(rework)" : "";
-  return tasks.map((task) => {
-    const programmerId = getAssignee(programmers.length);
-    const programmer = programmers[programmerId];
+  return tasks.map((task, i) => {
+    const programmer = getAssignee(tasks, programmers, tasks.length, i);
     return {
       task: `${taskName[task]}${affix}`,
       rework,
@@ -177,15 +227,23 @@ export function generateTask(params) {
     rnj,
     rmj,
     startDate,
+    arrivalA,
+    arrivalC,
+    arrivalM,
+    taskA,
+    taskC,
+    taskM,
+    threshold,
+    taskTimeTolerance,
   } = params;
   const skills = [
     {
-      status: "senior",
-      salary: 30000,
-    },
-    {
       status: "junior",
       salary: 20000,
+    },
+    {
+      status: "senior",
+      salary: 30000,
     },
   ];
 
@@ -214,7 +272,7 @@ export function generateTask(params) {
   const juniorProgrammers = programmers.filter(
     (programmer) => programmer.status === "junior"
   );
-  const tasks = getTaskProb(totalTask);
+  const tasks = getTaskProb(totalTask, taskA, taskC, taskM, threshold);
   let coreTask = assignTask(tasks, programmers);
 
   coreTask.push(
@@ -250,7 +308,7 @@ export function generateTask(params) {
     const { task, status } = tasks;
     return {
       ...tasks,
-      duration: durations[task][status],
+      duration: getConstantRange(durations[task][status], taskTimeTolerance),
     };
   });
 
@@ -292,5 +350,24 @@ export function generateTask(params) {
   }
 
   const summary = summaryProject(gantt, summaryWorker);
-  return { gantt, summary, summaryWorker };
+  const distributionTask = getTaskDistribution(
+    totalTask,
+    taskA,
+    taskC,
+    taskM,
+    threshold
+  );
+  const arrivalDisribution = getArrivalDistribution(
+    totalTask,
+    arrivalA,
+    arrivalC,
+    arrivalM
+  );
+  return {
+    gantt,
+    summary,
+    summaryWorker,
+    arrivalDisribution,
+    taskDistribution: distributionTask,
+  };
 }
