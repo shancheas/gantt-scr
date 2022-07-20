@@ -7,7 +7,15 @@ export function taskDistribution(ui, threshold = 0.6) {
   return 0 <= ui && ui <= threshold ? 1 : 2;
 }
 
-export function distribution({ a, c, m, totalTask, func, threshold = 0.6 }) {
+export function distribution({
+  a,
+  c,
+  m,
+  totalTask,
+  func,
+  threshold = 0.6,
+  programmerThreshold = 0.5,
+}) {
   let initial = 1;
   const distributions = [];
 
@@ -17,6 +25,7 @@ export function distribution({ a, c, m, totalTask, func, threshold = 0.6 }) {
     const ui = zi / m;
 
     const value = func(ui, threshold);
+    const skillValue = 0 <= ui && ui <= programmerThreshold ? 1 : 2;
     initial = zi;
 
     distributions.push({ i, first, zi, ui, value: value });

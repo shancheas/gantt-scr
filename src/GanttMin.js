@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Row, Col, Descriptions, Tabs, Table } from "antd";
-import Gantt from "@dhtmlx/trial-react-gantt";
+// import Gantt from "@dhtmlx/trial-react-gantt";
 
-import { getData } from "./common/data";
-import { generateTask } from "./formula/scr";
+// import { getData } from "./common/data";
+import { generateTask } from "./formula/new-scr";
 import { FormInput } from "./ScrForm";
 
 const { TabPane } = Tabs;
@@ -18,41 +18,129 @@ const tableColumns = [
     title: "Initial",
     dataIndex: "first",
     key: "first",
+    render: (text) => text.toFixed(2),
   },
   {
     title: "Zi",
     dataIndex: "zi",
     key: "zi",
+    render: (text) => text.toFixed(2),
   },
   {
     title: "Ui",
     dataIndex: "ui",
     key: "ui",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "SCR Type Value",
+    dataIndex: "value",
+    key: "value",
+  },
+  {
+    title: "Programmer Value",
+    dataIndex: "skillValue",
+    key: "skillValue",
+  },
+];
+
+const tableArrivalColumns = [
+  {
+    title: "No",
+    dataIndex: "i",
+    key: "no",
+  },
+  {
+    title: "Initial",
+    dataIndex: "first",
+    key: "first",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Zi",
+    dataIndex: "zi",
+    key: "zi",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Ui",
+    dataIndex: "ui",
+    key: "ui",
+    render: (text) => text.toFixed(2),
   },
   {
     title: "Value",
     dataIndex: "value",
     key: "value",
+    render: (text) => text.toFixed(2),
+  },
+];
+
+const tableTaskColumns = [
+  {
+    title: "No",
+    dataIndex: "index",
+    key: "index",
+  },
+  {
+    title: "Arrival",
+    dataIndex: "taskArrival",
+    key: "taskArrival",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Start",
+    dataIndex: "start",
+    key: "start",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "End",
+    dataIndex: "end",
+    key: "end",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Duration",
+    dataIndex: "duration",
+    key: "duration",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Duration Process",
+    dataIndex: "durationProcess",
+    key: "durationProcess",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Queue",
+    dataIndex: "queue",
+    key: "queue",
+    render: (text) => text.toFixed(2),
   },
 ];
 
 export default function GanttMin({ cellHeight, borders }) {
-  const [gantt, setGantt] = useState(null);
+  // const [gantt, setGantt] = useState(null);
+  const [workers, setWorkers] = useState(null);
   const [projectSummary, setSummary] = useState(null);
   const [programmerSummary, setProgrammer] = useState(null);
   const [arrival, setArrival] = useState(null);
   const [taskDistribution, setTaskDistribution] = useState(null);
-  const { scales, columns } = getData();
+  // const { scales, columns } = getData();
 
   function onGenerate(value) {
     const {
-      gantt,
+      // gantt,
+      workers,
       summary,
       summaryWorker,
       arrivalDisribution,
       taskDistribution,
     } = generateTask(value);
-    setGantt(gantt);
+    // setGantt(gantt);
+    console.log(summaryWorker);
+    setWorkers(workers);
     setSummary(summary);
     setProgrammer(summaryWorker);
     setArrival(arrivalDisribution);
@@ -71,8 +159,9 @@ export default function GanttMin({ cellHeight, borders }) {
   return (
     <>
       <FormInput onGenerate={onGenerate} />
-      {gantt &&
-        projectSummary &&
+      {projectSummary &&
+        // gantt &&
+        workers &&
         programmerSummary &&
         arrival &&
         taskDistribution && (
@@ -114,7 +203,7 @@ export default function GanttMin({ cellHeight, borders }) {
             </div>
 
             <Tabs defaultActiveKey="1">
-              <TabPane tab="Timeline" key="1" style={{ height: "800px" }}>
+              {/* <TabPane tab="Timeline" key="1" style={{ height: "800px" }}>
                 <Gantt
                   cellHeight={cellHeight}
                   borders={borders}
@@ -123,7 +212,7 @@ export default function GanttMin({ cellHeight, borders }) {
                   columns={columns}
                   grid={{ width: 700 }}
                 />
-              </TabPane>
+              </TabPane> */}
               <TabPane tab="Programmers" key="2">
                 <div style={{ margin: 16 }}>
                   <Row gutter={16}>
@@ -180,22 +269,40 @@ export default function GanttMin({ cellHeight, borders }) {
                     <h2>Arrival Distribution</h2>
                     <Table
                       dataSource={arrival}
-                      columns={tableColumns}
+                      columns={tableArrivalColumns}
                       pagination={false}
                       rowKey="i"
+                      size="small"
                     />
-                    ;
                   </Col>
-                  <Col span={8}>
+                  <Col span={12}>
                     <h2>Task Distribution</h2>
                     <Table
                       dataSource={taskDistribution}
                       columns={tableColumns}
                       pagination={false}
                       rowKey="i"
+                      size="small"
                     />
-                    ;
                   </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab="Programmers Distribution" key="4">
+                <Row gutter={16}>
+                  {workers.map((worker) => {
+                    return (
+                      <Col span={8}>
+                        <h2>{worker.name}</h2>
+                        <Table
+                          dataSource={worker.task}
+                          columns={tableTaskColumns}
+                          pagination={false}
+                          size="small"
+                          rowKey="index"
+                        />
+                      </Col>
+                    );
+                  })}
                 </Row>
               </TabPane>
             </Tabs>

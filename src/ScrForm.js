@@ -39,6 +39,7 @@ export const FormInput = ({ onGenerate }) => {
           totalTask: TOTAL_SCR,
           totalProgrammer: TOTAL_PROGRAMMER,
           startDate: moment(),
+          duration: 2,
           dns,
           dms,
           rns,
