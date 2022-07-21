@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Row, Col, Descriptions, Tabs, Table } from "antd";
 import Gantt from "./components/Gantt";
 import Toolbar from "./components/Toolbar";
@@ -131,6 +131,8 @@ export default function GanttMin({ cellHeight, borders }) {
   const [zoom, setZoom] = useState("Days");
   const { scales, columns } = getData();
 
+  const ganttRef = useRef();
+
   function onGenerate(value) {
     const {
       gantt,
@@ -140,12 +142,13 @@ export default function GanttMin({ cellHeight, borders }) {
       arrivalDisribution,
       taskDistribution,
     } = generateTask(value);
-    setGantt({ scales, columns, data: gantt });
+    setGantt(gantt);
     setWorkers(workers);
     setSummary(summary);
     setProgrammer(summaryWorker);
     setArrival(arrivalDisribution);
     setTaskDistribution(taskDistribution);
+    ganttRef.current.forceUpdate();
   }
 
   function hoursToMonth(hours) {
@@ -211,8 +214,9 @@ export default function GanttMin({ cellHeight, borders }) {
                   </div>
                   <div className="gantt-container">
                     <Gantt
+                      ref={ganttRef}
                       zoom={zoom}
-                      tasks={gantt}
+                      tasks={{ scales, columns, data: gantt }}
                       cellHeight={cellHeight}
                       borders={borders}
                       grid={{ width: 700 }}
