@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Row, Col, Descriptions, Tabs, Table } from "antd";
-// import Gantt from "@dhtmlx/trial-react-gantt";
+import Gantt from "./components/Gantt";
+import Toolbar from "./components/Toolbar";
 
-// import { getData } from "./common/data";
+import { getData } from "./common/data";
 import { generateTask } from "./formula/new-scr";
 import { FormInput } from "./ScrForm";
 
@@ -121,25 +122,25 @@ const tableTaskColumns = [
 ];
 
 export default function GanttMin({ cellHeight, borders }) {
-  // const [gantt, setGantt] = useState(null);
+  const [gantt, setGantt] = useState(null);
   const [workers, setWorkers] = useState(null);
   const [projectSummary, setSummary] = useState(null);
   const [programmerSummary, setProgrammer] = useState(null);
   const [arrival, setArrival] = useState(null);
   const [taskDistribution, setTaskDistribution] = useState(null);
-  // const { scales, columns } = getData();
+  const [zoom, setZoom] = useState("Days");
+  const { scales, columns } = getData();
 
   function onGenerate(value) {
     const {
-      // gantt,
+      gantt,
       workers,
       summary,
       summaryWorker,
       arrivalDisribution,
       taskDistribution,
     } = generateTask(value);
-    // setGantt(gantt);
-    console.log(summaryWorker);
+    setGantt({ scales, columns, data: gantt });
     setWorkers(workers);
     setSummary(summary);
     setProgrammer(summaryWorker);
@@ -160,7 +161,7 @@ export default function GanttMin({ cellHeight, borders }) {
     <>
       <FormInput onGenerate={onGenerate} />
       {projectSummary &&
-        // gantt &&
+        gantt &&
         workers &&
         programmerSummary &&
         arrival &&
@@ -203,16 +204,22 @@ export default function GanttMin({ cellHeight, borders }) {
             </div>
 
             <Tabs defaultActiveKey="1">
-              {/* <TabPane tab="Timeline" key="1" style={{ height: "800px" }}>
-                <Gantt
-                  cellHeight={cellHeight}
-                  borders={borders}
-                  tasks={gantt}
-                  scales={scales}
-                  columns={columns}
-                  grid={{ width: 700 }}
-                />
-              </TabPane> */}
+              <TabPane tab="Timeline" key="1" style={{ height: "800px" }}>
+                <div>
+                  <div className="zoom-bar">
+                    <Toolbar zoom={zoom} onZoomChange={setZoom} />
+                  </div>
+                  <div className="gantt-container">
+                    <Gantt
+                      zoom={zoom}
+                      tasks={gantt}
+                      cellHeight={cellHeight}
+                      borders={borders}
+                      grid={{ width: 700 }}
+                    />
+                  </div>
+                </div>
+              </TabPane>
               <TabPane tab="Programmers" key="2">
                 <div style={{ margin: 16 }}>
                   <Row gutter={16}>

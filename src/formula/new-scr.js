@@ -2,6 +2,8 @@ import { faker } from "@faker-js/faker";
 import moment from "moment";
 faker.setLocale("id_ID");
 const totalTask = 500;
+const officeStart = 9;
+const officeHour = 8;
 
 function randomNumber(min, max) {
   return Math.random() * (max - min + 1) + min;
@@ -104,9 +106,53 @@ const programmerStatus = [
   },
 ];
 
-function summaryProgrammer(programmers) {
+const scrStatus = ["Modify Task", "New Task"];
+
+function taskDetail(tasks, startDate) {
+  return tasks.map((task, i) => {
+    const { start, end, name, skill, scr, duration } = task;
+    const dayStart = Math.floor(start / officeHour);
+    const hourStart = officeStart + (start % officeHour);
+    const startTime = moment(startDate)
+      .add(dayStart, "days")
+      .add(hourStart, "hours");
+
+    const dayEnd = Math.floor(end / officeHour);
+    const hourEnd = officeStart + (end % officeHour);
+    const endTime = moment(startDate).add(dayEnd, "days").add(hourEnd, "hours");
+
+    const start_f = startTime.format("YYYY/MM/DD H:mm");
+    const end_f = endTime.format("YYYY/MM/DD H:mm");
+    const text = scrStatus[scr - 1];
+    const status = programmerStatus[skill - 1].status;
+
+    return {
+      ...task,
+      start_date: startTime.toDate(),
+      end_date: endTime.toDate(),
+      startTime,
+      endTime,
+      start_f,
+      end_f,
+      text,
+      status,
+      name,
+      // duration: Math.ceil(duration / officeHour),
+      hours: duration.toFixed(2),
+      id: i + 1,
+    };
+  });
+}
+
+function summaryProgrammer(programmers, startDate) {
   return programmers.map((programmer) => {
     const { status, rate } = programmerStatus[programmer.skill - 1];
+    const detail = taskDetail(
+      programmer.task.map((t) => {
+        return { ...t, skill: programmer.skill, name: programmer.name };
+      }),
+      startDate
+    );
     const name = programmer.name;
     const totalTask = programmer.task.length;
     const hours = programmer.task.reduce((a, b) => {
@@ -117,8 +163,8 @@ function summaryProgrammer(programmers) {
     const totalRework = 0;
     const newFeatureRework = 0;
     const modifyFeatureRework = 0;
-    const start = moment();
-    const end = moment();
+    const start = detail[0].startTime;
+    const end = [...detail].pop().endTime;
     const newFeature = programmer.task.filter(
       (task) => task.value === 2
     ).length;
@@ -184,6 +230,19 @@ function summaryProject(programmers) {
   };
 }
 
+function createGantt(programmers, startDate) {
+  const tasks = programmers
+    .map((p) => {
+      const { task, name, skill, id } = p;
+      return task.map((t) => {
+        return { ...t, name, skill, id };
+      });
+    })
+    .flat();
+
+  return taskDetail(tasks, startDate);
+}
+
 export function generateTask(params) {
   const {
     totalProgrammer,
@@ -195,7 +254,7 @@ export function generateTask(params) {
     dmj,
     // rnj,
     // rmj,
-    // startDate,
+    startDate,
     arrivalA,
     arrivalC,
     arrivalM,
@@ -267,6 +326,7 @@ export function generateTask(params) {
       : 0;
     const durationProcess = duration + queue;
     const worker = workers.find((worker) => worker.id === assignee.id);
+
     worker.name = faker.name.findName();
     worker.task.push({
       index,
@@ -281,10 +341,15 @@ export function generateTask(params) {
     index++;
   }
 
-  summaryWorker.push(...summaryProgrammer(workers));
+  summaryWorker.push(...summaryProgrammer(workers, startDate));
   const summary = summaryProject(summaryWorker);
+  const gantt = createGantt(
+    workers,
+    startDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+  );
 
   return {
+    gantt,
     summary,
     summaryWorker,
     workers,

@@ -9,6 +9,7 @@
     "antd": "^4.21.3",
     "classnames": "^2.2.6",
     "date-fns": "^2.19.0",
+    "dhtmlx-gantt": "^7.1.12",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "react": "^17.0.1",
