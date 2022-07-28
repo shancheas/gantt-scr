@@ -75,6 +75,7 @@ export default class Gantt extends Component {
     gantt.config.date_format = "%Y-%m-%d %H:%i";
     const { tasks } = this.props;
     gantt.config.columns = tasks.columns;
+    gantt.config.sort = true;
     gantt.init(this.ganttContainer);
     this.initGanttDataProcessor();
     gantt.parse(tasks);

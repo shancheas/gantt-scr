@@ -115,40 +115,47 @@ const programmerStatus = [
 const scrStatus = ["Modify Task", "New Task"];
 
 function taskDetail(tasks, startDate) {
-  return tasks.map((task, i) => {
-    const { start, end, name, skill, scr, duration, rework } = task;
-    const dayStart = Math.floor(start / officeHour);
-    const hourStart = officeStart + (start % officeHour);
-    const startTime = moment(startDate)
-      .add(dayStart, "days")
-      .add(hourStart, "hours");
+  return tasks
+    .sort((a, b) => parseInt(a.taskArrival) - parseInt(b.taskArrival))
+    .map((task, i) => {
+      const { start, end, name, skill, scr, duration, rework, taskArrival } =
+        task;
+      const dayStart = Math.floor(start / officeHour);
+      const hourStart = officeStart + (start % officeHour);
+      const startTime = moment(startDate)
+        .add(dayStart, "days")
+        .add(hourStart, "hours");
 
-    const dayEnd = Math.floor(end / officeHour);
-    const hourEnd = officeStart + (end % officeHour);
-    const endTime = moment(startDate).add(dayEnd, "days").add(hourEnd, "hours");
+      const dayEnd = Math.floor(end / officeHour);
+      const hourEnd = officeStart + (end % officeHour);
+      const endTime = moment(startDate)
+        .add(dayEnd, "days")
+        .add(hourEnd, "hours");
 
-    const reworkTask = rework ? " (rework)" : "";
-    const start_f = startTime.format("YYYY/MM/DD H:mm");
-    const end_f = endTime.format("YYYY/MM/DD H:mm");
-    const text = scrStatus[scr - 1] + reworkTask;
-    const status = programmerStatus[skill - 1].status;
+      const reworkTask = rework ? " (rework)" : "";
+      const start_f = startTime.format("YYYY/MM/DD H:mm");
+      const end_f = endTime.format("YYYY/MM/DD H:mm");
+      const text = scrStatus[scr - 1] + reworkTask;
+      const status = programmerStatus[skill - 1].status;
+      const arrival = +taskArrival.toFixed(2);
 
-    return {
-      ...task,
-      start_date: startTime.toDate(),
-      end_date: endTime.toDate(),
-      startTime,
-      endTime,
-      start_f,
-      end_f,
-      text,
-      status,
-      name,
-      // duration: Math.ceil(duration / officeHour),
-      hours: duration.toFixed(2),
-      id: i + 1,
-    };
-  });
+      return {
+        ...task,
+        start_date: startTime.toDate(),
+        end_date: endTime.toDate(),
+        startTime,
+        endTime,
+        start_f,
+        end_f,
+        text,
+        status,
+        name,
+        arrival,
+        // duration: Math.ceil(duration / officeHour),
+        hours: duration.toFixed(2),
+        id: i + 1,
+      };
+    });
 }
 
 function summaryProgrammer(programmers, startDate) {
