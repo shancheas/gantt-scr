@@ -81,6 +81,7 @@ export function getData(prefix, maxSize, maxYears) {
     { name: "end_f", label: "End time", width: 125 },
     // { name: "start_date", label: "Start time", align: "center" },
     // { name: "end_date", label: "End time", align: "center" },
+    { name: "queue", label: "Queue", width: "70", align: "center" },
     { name: "arrival", label: "Arrival", width: "70", align: "center" },
     { name: "hours", label: "Duration", width: "70", align: "center" },
     // { name: "add-task", label: "", width: "50", align: "center" },

@@ -12,7 +12,8 @@ const MODIFY_TASK = 1;
 const NEW_TASK = 2;
 
 function randomNumber(min, max) {
-  return Math.random() * (max - min + 1) + min;
+  const num = Math.random() * (max - min + 1) + min;
+  return num > max ? max : num;
 }
 
 const taskAssignDistribution = ({
@@ -72,8 +73,9 @@ const scrArrivalDistribution = ({
 };
 
 function srcDuration(scr, skill, durationTable, tolerance = 2) {
+  console.log({ tolerance });
   const duration = durationTable[scr - 1][skill - 1];
-  return randomNumber(duration - tolerance, duration + tolerance);
+  return randomNumber(duration, duration + tolerance);
 }
 
 function findReadyProgrammer(programmers) {
@@ -151,6 +153,7 @@ function taskDetail(tasks, startDate) {
         status,
         name,
         arrival,
+        queue: task.queue.toFixed(2),
         // duration: Math.ceil(duration / officeHour),
         hours: duration.toFixed(2),
         id: i + 1,

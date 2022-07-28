@@ -7,6 +7,7 @@ import {
   DatePicker,
   Button,
   Tabs,
+  Slider,
   // Divider,
 } from "antd";
 import moment from "moment";
@@ -34,7 +35,12 @@ const taskC = 7;
 const taskM = 64;
 
 const threshold = 0.6;
-const taskTimeTolerance = 2;
+const taskTimeTolerance = 0;
+
+const marks = {
+  0: "😄",
+  4: "😫",
+};
 
 export const FormInput = ({ onGenerate }) => {
   const [form] = Form.useForm();
@@ -105,6 +111,7 @@ export const FormInput = ({ onGenerate }) => {
                   </Form.Item>
                   <Form.Item name="duration" label="Rencana Durasi Projek">
                     <InputNumber
+                      addonAfter="Bulan"
                       placeholder="dalam bulan"
                       style={{ width: "100%" }}
                     />
@@ -150,10 +157,11 @@ export const FormInput = ({ onGenerate }) => {
                     />
                   </Form.Item>
                   <Form.Item name="taskTimeTolerance" label="Task Range (±)">
-                    <InputNumber
+                    <Slider marks={marks} max={4} />
+                    {/* <InputNumber
                       placeholder="input placeholder"
                       style={{ width: "100%" }}
-                    />
+                    /> */}
                   </Form.Item>
                 </Col>
                 <Col span={6}>
