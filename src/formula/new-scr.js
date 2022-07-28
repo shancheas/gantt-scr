@@ -95,9 +95,9 @@ function findReadyProgrammer(programmers) {
   return freeProgrammer.length > 0 ? freeProgrammer[0] : programmerTask[0];
 }
 
-function generateProgrammers(total) {
+function generateProgrammers(total, skill) {
   return Array.from(Array(total).keys()).map(() => {
-    return Math.floor(randomNumber(1, 2));
+    return skill;
   });
 }
 
@@ -274,7 +274,8 @@ function reworkTask(taskDistribution, scrValue, skillValue, prob) {
 
 export function generateTask(params) {
   const {
-    totalProgrammer,
+    juniorProgrammer,
+    seniorProgrammer,
     dns,
     dms,
     rns,
@@ -295,7 +296,11 @@ export function generateTask(params) {
     duration,
   } = params;
 
-  const programmers = generateProgrammers(totalProgrammer);
+  const programmers = [
+    ...generateProgrammers(juniorProgrammer, JUNIOR),
+    ...generateProgrammers(seniorProgrammer, SENIOR),
+  ];
+
   let taskAssign = taskAssignDistribution({
     a: taskA,
     c: taskC,

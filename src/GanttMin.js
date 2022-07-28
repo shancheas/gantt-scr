@@ -34,12 +34,12 @@ const tableColumns = [
     render: (text) => text.toFixed(2),
   },
   {
-    title: "SCR Type Value",
+    title: "Jenis SCR",
     dataIndex: "value",
     key: "value",
   },
   {
-    title: "Programmer Value",
+    title: "Programmer Skill",
     dataIndex: "skillValue",
     key: "skillValue",
   },
@@ -70,7 +70,7 @@ const tableArrivalColumns = [
     render: (text) => text.toFixed(2),
   },
   {
-    title: "Value",
+    title: "Arrival Time",
     dataIndex: "value",
     key: "value",
     render: (text) => text.toFixed(2),
@@ -284,6 +284,7 @@ export default function GanttMin({ cellHeight, borders }) {
                       pagination={false}
                       rowKey="i"
                       size="small"
+                      bordered
                     />
                   </Col>
                   <Col span={12}>
@@ -294,6 +295,7 @@ export default function GanttMin({ cellHeight, borders }) {
                       pagination={false}
                       rowKey="i"
                       size="small"
+                      bordered
                     />
                   </Col>
                 </Row>
@@ -310,6 +312,7 @@ export default function GanttMin({ cellHeight, borders }) {
                           pagination={false}
                           size="small"
                           rowKey="index"
+                          bordered
                         />
                       </Col>
                     );
