@@ -397,8 +397,9 @@ export function generateTask(params) {
 
   const summaryWorker = [];
 
+  const arrivalDistribution = [...scrDistribution, ...scrRework];
   let index = 1;
-  for (const scr of [...scrDistribution, ...scrRework]) {
+  for (const scr of arrivalDistribution) {
     const { skillValue, taskArrival, duration, value, rework } = scr;
     const programmers = workers.filter((worker) => worker.skill === skillValue);
 
@@ -437,7 +438,7 @@ export function generateTask(params) {
     summary,
     summaryWorker,
     workers,
-    arrivalDisribution: scrArrival,
+    arrivalDisribution: arrivalDistribution,
     taskDistribution: taskAssign,
   };
 }

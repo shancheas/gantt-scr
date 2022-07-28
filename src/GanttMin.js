@@ -70,9 +70,15 @@ const tableArrivalColumns = [
     render: (text) => text.toFixed(2),
   },
   {
-    title: "Arrival Time",
+    title: "Value",
     dataIndex: "value",
     key: "value",
+    render: (text) => text.toFixed(2),
+  },
+  {
+    title: "Arrival Time",
+    dataIndex: "taskArrival",
+    key: "taskArrival",
     render: (text) => text.toFixed(2),
   },
 ];
@@ -276,7 +282,7 @@ export default function GanttMin({ cellHeight, borders }) {
               </TabPane>
               <TabPane tab="Distribution Table" key="3">
                 <Row gutter={16}>
-                  <Col span={8}>
+                  <Col span={11}>
                     <h2>Arrival Distribution</h2>
                     <Table
                       dataSource={arrival}
@@ -287,7 +293,7 @@ export default function GanttMin({ cellHeight, borders }) {
                       bordered
                     />
                   </Col>
-                  <Col span={12}>
+                  <Col span={11}>
                     <h2>Task Distribution</h2>
                     <Table
                       dataSource={taskDistribution}
