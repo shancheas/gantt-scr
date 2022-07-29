@@ -285,7 +285,6 @@ function reworkTask(taskDistribution, scrValue, skillValue, prob) {
     (task) => task.value === scrValue && task.skillValue === skillValue
   ).length;
   const totalRework = Math.floor(totalTask * prob);
-  console.log(totalTask, totalRework, prob);
 
   return Array.from(Array(totalRework)).map(() => {
     return { skillValue, value: scrValue, rework: true };
@@ -376,12 +375,11 @@ export function generateTask(params) {
       taskTimeTolerance
     );
 
-    console.log({ duration });
-
     return {
       ...scr,
       duration,
       skillValue,
+      value,
       scrArrive: scr.value,
       arrive: scr.value,
       rework: false,
@@ -401,6 +399,7 @@ export function generateTask(params) {
       ...scr,
       duration,
       skillValue,
+      value,
       scrArrive: scr.value,
       arrive: scr.value,
       rework: true,
