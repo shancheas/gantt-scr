@@ -24,7 +24,7 @@ const taskAssignDistribution = ({
   programmers,
 }) => {
   const programmerThreshold =
-    programmers.filter((p) => p === 2).length / programmers.length;
+    programmers.filter((p) => p === JUNIOR).length / programmers.length;
 
   let initial = 1;
 
