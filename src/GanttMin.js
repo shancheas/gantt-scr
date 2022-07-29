@@ -192,10 +192,12 @@ export default function GanttMin({ cellHeight, borders }) {
                       {projectSummary.end.format("DD MMMM YYYY")}
                     </Descriptions.Item>
                     <Descriptions.Item label="Duration">
-                      {projectSummary.duration.toLocaleString()} days
+                      {hoursToMonth(projectSummary.hours)}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Total SCR">
-                      {projectSummary.totalTask.toLocaleString()} Tasks
+                    <Descriptions.Item label="Total Task">
+                      {projectSummary.totalTask.toLocaleString()} Tasks (
+                      {projectSummary.totalSCR.toLocaleString()} SCR,{" "}
+                      {projectSummary.totalRework.toLocaleString()} Rework)
                     </Descriptions.Item>
                     <Descriptions.Item label="Total Hours">
                       {projectSummary.hours.toLocaleString()} hours
@@ -213,7 +215,12 @@ export default function GanttMin({ cellHeight, borders }) {
             </div>
 
             <Tabs defaultActiveKey="1">
-              <TabPane tab="Timeline" key="1" style={{ height: "800px" }}>
+              <TabPane
+                tab="Timeline"
+                key="1"
+                style={{ height: "800px" }}
+                forceRender
+              >
                 <div>
                   <div className="zoom-bar">
                     <Toolbar zoom={zoom} onZoomChange={setZoom} />

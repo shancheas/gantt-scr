@@ -166,7 +166,7 @@ export const FormInput = ({ onGenerate }) => {
                 </Col>
                 <Col span={6}>
                   <Form.Item>
-                    <h2>Rework</h2>
+                    <h2>Peluang Rework</h2>
                   </Form.Item>
                   <Form.Item name="rnj" label="Rework New Junior (Pnj)">
                     <InputNumber
