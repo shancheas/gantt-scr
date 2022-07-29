@@ -38,8 +38,9 @@ const threshold = 0.6;
 const taskTimeTolerance = 0;
 
 const marks = {
-  0: "😄",
-  4: "😫",
+  "-2": "😄",
+  0: "🙂",
+  2: "😫",
 };
 
 export const FormInput = ({ onGenerate }) => {
@@ -116,6 +117,9 @@ export const FormInput = ({ onGenerate }) => {
                       style={{ width: "100%" }}
                     />
                   </Form.Item>
+                  <Form.Item name="taskTimeTolerance" label="Task Range (±)">
+                    <Slider marks={marks} max={2} min={-2} />
+                  </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
                       Generate
@@ -155,13 +159,6 @@ export const FormInput = ({ onGenerate }) => {
                       placeholder="input placeholder"
                       style={{ width: "100%" }}
                     />
-                  </Form.Item>
-                  <Form.Item name="taskTimeTolerance" label="Task Range (±)">
-                    <Slider marks={marks} max={4} />
-                    {/* <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    /> */}
                   </Form.Item>
                 </Col>
                 <Col span={6}>
