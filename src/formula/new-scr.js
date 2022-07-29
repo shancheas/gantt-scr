@@ -12,6 +12,7 @@ const MODIFY_TASK = 1;
 const NEW_TASK = 2;
 
 function randomNumber(min, max) {
+  if (min > max) [min, max] = [max, min];
   const num = Math.random() * (max - min + 1) + min;
   return num > max ? max : num;
 }
@@ -374,6 +375,8 @@ export function generateTask(params) {
       durationTable,
       taskTimeTolerance
     );
+
+    console.log({ duration });
 
     return {
       ...scr,
