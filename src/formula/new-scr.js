@@ -35,8 +35,8 @@ const taskAssignDistribution = ({
     const zi = first % m;
     const ui = zi / m;
 
-    const value = 0 <= ui && ui <= threshold ? 1 : 2;
-    const skillValue = 0 <= ui && ui <= programmerThreshold ? 1 : 2;
+    const value = 0 <= ui && ui <= threshold ? MODIFY_TASK : NEW_TASK;
+    const skillValue = 0 <= ui && ui <= programmerThreshold ? JUNIOR : SENIOR;
 
     initial = zi;
 
@@ -73,7 +73,6 @@ const scrArrivalDistribution = ({
 };
 
 function srcDuration(scr, skill, durationTable, tolerance = 2) {
-  console.log({ tolerance });
   const duration = durationTable[scr - 1][skill - 1];
   return randomNumber(duration, duration + tolerance);
 }
@@ -134,12 +133,18 @@ function taskDetail(tasks, startDate) {
         .add(dayEnd, "days")
         .add(hourEnd, "hours");
 
+      const dayArrival = Math.floor(taskArrival / officeHour);
+      const hourArrival = officeStart + (taskArrival % officeHour);
+      const arrivalTime = moment(startDate)
+        .add(dayArrival, "days")
+        .add(hourArrival, "hours");
+
       const reworkTask = rework ? " (rework)" : "";
       const start_f = startTime.format("YYYY/MM/DD H:mm");
       const end_f = endTime.format("YYYY/MM/DD H:mm");
+      const arrival_f = arrivalTime.format("YYYY/MM/DD H:mm");
       const text = scrStatus[scr - 1] + reworkTask;
       const status = programmerStatus[skill - 1].status;
-      const arrival = +taskArrival.toFixed(2);
 
       return {
         ...task,
@@ -152,7 +157,7 @@ function taskDetail(tasks, startDate) {
         text,
         status,
         name,
-        arrival,
+        arrival: arrival_f,
         queue: task.queue.toFixed(2),
         // duration: Math.ceil(duration / officeHour),
         hours: duration.toFixed(2),
@@ -185,18 +190,18 @@ function summaryProgrammer(programmers, startDate) {
       (task) => task.rework === true
     ).length;
     const newFeatureRework = programmer.task.filter(
-      (task) => task.value === 2 && task.rework === true
+      (task) => task.value === NEW_TASK && task.rework === true
     ).length;
     const modifyFeatureRework = programmer.task.filter(
-      (task) => task.value === 1 && task.rework === true
+      (task) => task.value === MODIFY_TASK && task.rework === true
     ).length;
     const start = detail[0].startTime;
     const end = [...detail].pop().endTime;
     const newFeature = programmer.task.filter(
-      (task) => task.value === 2 && task.rework === false
+      (task) => task.value === NEW_TASK && task.rework === false
     ).length;
     const modifyFeature = programmer.task.filter(
-      (task) => task.value === 1 && task.rework === false
+      (task) => task.value === MODIFY_TASK && task.rework === false
     ).length;
 
     return {
@@ -242,6 +247,8 @@ function summaryProject(programmers) {
 
   const duration = end.diff(start, "days");
   const totalTask = tasks.length;
+  const totalSCR = tasks.filter((task) => task.rework === false).length;
+  const totalRework = tasks.filter((task) => task.rework === true).length;
   const totalProgrammer = programmers.length;
 
   return {
@@ -251,6 +258,8 @@ function summaryProject(programmers) {
     hours,
     cost,
     totalTask,
+    totalSCR,
+    totalRework,
     totalProgrammer,
     seniorProgrammers,
     juniorProgrammers,
@@ -288,10 +297,10 @@ export function generateTask(params) {
     seniorProgrammer,
     dns,
     dms,
-    rns,
-    rms,
     dnj,
     dmj,
+    rns,
+    rms,
     rnj,
     rmj,
     startDate,
@@ -328,7 +337,12 @@ export function generateTask(params) {
     [dnj, dns],
   ];
 
-  const maxHours = duration * 8 * 21;
+  const durationReworkTable = [
+    [2, 2],
+    [2, 2],
+  ];
+
+  const maxHours = duration * officeHour * 21;
   const maxIndex = scrArrivalDist.findIndex(
     (arrival) => arrival.taskArrival > maxHours
   );
@@ -376,7 +390,7 @@ export function generateTask(params) {
     const duration = srcDuration(
       value,
       skillValue,
-      durationTable,
+      durationReworkTable,
       taskTimeTolerance
     );
 
