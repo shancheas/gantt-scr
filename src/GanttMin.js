@@ -71,8 +71,8 @@ const tableArrivalColumns = [
   },
   {
     title: "Value",
-    dataIndex: "value",
-    key: "value",
+    dataIndex: "scrArrive",
+    key: "scrArrive",
     render: (text) => text.toFixed(2),
   },
   {

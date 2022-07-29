@@ -74,7 +74,7 @@ const scrArrivalDistribution = ({
 
 function srcDuration(scr, skill, durationTable, tolerance = 2) {
   const duration = durationTable[scr - 1][skill - 1];
-  return randomNumber(duration, duration + tolerance);
+  return Math.abs(randomNumber(duration, duration + +tolerance));
 }
 
 function findReadyProgrammer(programmers) {
@@ -379,7 +379,7 @@ export function generateTask(params) {
       ...scr,
       duration,
       skillValue,
-      value,
+      scrArrive: scr.value,
       arrive: scr.value,
       rework: false,
     };
@@ -398,7 +398,7 @@ export function generateTask(params) {
       ...scr,
       duration,
       skillValue,
-      value,
+      scrArrive: scr.value,
       arrive: scr.value,
       rework: true,
     };
