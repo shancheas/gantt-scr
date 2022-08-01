@@ -315,9 +315,9 @@ export default function GanttMin({ cellHeight, borders }) {
               </TabPane>
               <TabPane tab="Programmers Distribution" key="4">
                 <Row gutter={16}>
-                  {workers.map((worker) => {
+                  {workers.map((worker, i) => {
                     return (
-                      <Col span={8}>
+                      <Col span={8} key={i}>
                         <h2>{worker.name}</h2>
                         <Table
                           dataSource={worker.task}

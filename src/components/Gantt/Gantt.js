@@ -83,6 +83,7 @@ export default class Gantt extends Component {
 
   componentDidUpdate() {
     const { tasks } = this.props;
+    gantt.clearAll();
     gantt.parse(tasks);
   }
 
