@@ -178,15 +178,18 @@ function summaryProgrammer(programmers, startDate) {
     );
     const name = programmer.name;
     const totalTask = programmer.task.length;
-    const hours = programmer.task.reduce((a, b) => {
-      return a + b.duration;
-    }, 0);
-    const salary = hours * rate;
+    const hours = programmer.task
+      .filter((task) => task.rework === false)
+      .reduce((a, b) => {
+        return a + b.duration;
+      }, 0);
+
     const hoursRework = programmer.task
       .filter((task) => task.rework === true)
       .reduce((a, b) => {
         return a + b.duration;
       }, 0);
+    const salary = (hours + hoursRework) * rate;
     const totalRework = programmer.task.filter(
       (task) => task.rework === true
     ).length;
