@@ -313,6 +313,7 @@ export function generateTask(params) {
     threshold,
     taskTimeTolerance,
     duration,
+    interarrival,
   } = params;
 
   const programmers = [
@@ -331,6 +332,7 @@ export function generateTask(params) {
     a: arrivalA,
     c: arrivalC,
     m: arrivalM,
+    arrivalConstant: interarrival,
   });
   const durationTable = [
     [dmj, dms],

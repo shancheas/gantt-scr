@@ -36,6 +36,7 @@ const taskM = 64;
 
 const threshold = 0.6;
 const taskTimeTolerance = 0;
+const interarrival = 8;
 
 const marks = {
   "-2": "😄",
@@ -75,6 +76,7 @@ export const FormInput = ({ onGenerate }) => {
           taskM,
           threshold,
           taskTimeTolerance,
+          interarrival,
         }}
         // wrapperCol={{ span: 14 }}
       >
@@ -207,6 +209,12 @@ export const FormInput = ({ onGenerate }) => {
                     />
                   </Form.Item>
                   <Form.Item name="arrivalM" label="Arrival M">
+                    <InputNumber
+                      placeholder="input placeholder"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                  <Form.Item name="interarrival" label="Inter Arrival">
                     <InputNumber
                       placeholder="input placeholder"
                       style={{ width: "100%" }}
