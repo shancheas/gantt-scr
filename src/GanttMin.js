@@ -192,7 +192,7 @@ export default function GanttMin({ cellHeight, borders }) {
                       {projectSummary.end.format("DD MMMM YYYY")}
                     </Descriptions.Item>
                     <Descriptions.Item label="Duration">
-                      {hoursToMonth(projectSummary.hours)}
+                      {projectSummary.duration.toLocaleString()} days
                     </Descriptions.Item>
                     <Descriptions.Item label="Total Task">
                       {projectSummary.totalTask.toLocaleString()} Tasks (
