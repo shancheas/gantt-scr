@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import moment from "moment";
 faker.setLocale("id_ID");
-const totalTask = 500;
+const totalTask = 2000;
 const officeStart = 9;
 const officeHour = 8;
 
