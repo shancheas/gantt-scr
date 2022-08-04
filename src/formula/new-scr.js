@@ -103,7 +103,7 @@ function generateProgrammers(total, skill) {
   });
 }
 
-const programmerStatus = [
+let programmerStatus = [
   {
     status: "junior",
     rate: 20000,
@@ -317,7 +317,20 @@ export function generateTask(params) {
     taskTimeTolerance,
     duration,
     interarrival,
+    rateseniorProgrammer,
+    ratejuniorProgrammer,
   } = params;
+
+  programmerStatus = [
+    {
+      status: "junior",
+      rate: ratejuniorProgrammer,
+    },
+    {
+      status: "senior",
+      rate: rateseniorProgrammer,
+    },
+  ];
 
   const programmers = [
     ...generateProgrammers(juniorProgrammer, JUNIOR),
