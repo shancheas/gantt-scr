@@ -165,7 +165,7 @@ export const FormInput = ({ onGenerate }) => {
                       style={{ width: "100%" }}
                     />
                   </Form.Item>
-                  <Form.Item name="taskTimeTolerance" label="Task Range (±)">
+                  <Form.Item name="taskTimeTolerance" label="Complexity">
                     <Slider marks={marks} max={2} min={-2} />
                   </Form.Item>
                   <Form.Item>
