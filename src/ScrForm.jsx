@@ -8,6 +8,7 @@ import {
   Button,
   Tabs,
   Slider,
+  Tooltip,
   // Divider,
 } from "antd";
 import moment from "moment";
@@ -38,10 +39,25 @@ const threshold = 0.6;
 const taskTimeTolerance = 0;
 const interarrival = 8;
 
+const seniorRate = 30000;
+const juniorRate = 20000;
+
 const marks = {
-  "-2": "😄",
-  0: "🙂",
-  2: "😫",
+  "-2": (
+    <Tooltip title="Easy">
+      <span>😄</span>
+    </Tooltip>
+  ),
+  0: (
+    <Tooltip title="Medium">
+      <span>🙂</span>
+    </Tooltip>
+  ),
+  2: (
+    <Tooltip title="Difficult">
+      <span>😫</span>
+    </Tooltip>
+  ),
 };
 
 export const FormInput = ({ onGenerate }) => {
@@ -57,6 +73,8 @@ export const FormInput = ({ onGenerate }) => {
         initialValues={{
           totalTask: TOTAL_SCR,
           seniorProgrammer: 1,
+          rateseniorProgrammer: seniorRate,
+          ratejuniorProgrammer: juniorRate,
           juniorProgrammer: 1,
           startDate: moment(),
           duration: 2,
@@ -81,7 +99,7 @@ export const FormInput = ({ onGenerate }) => {
         // wrapperCol={{ span: 14 }}
       >
         <Tabs defaultActiveKey="1">
-          <TabPane tab="DECISION VARIABEL" key="1">
+          <TabPane tab="INPUT" key="1">
             <Card>
               <Row gutter={16}>
                 <Col span={8}>
@@ -99,6 +117,21 @@ export const FormInput = ({ onGenerate }) => {
                     </Col>
                     <Col span={12}>
                       <Form.Item
+                        name="rateseniorProgrammer"
+                        label="Rate Senior Programmer"
+                      >
+                        <InputNumber
+                          addonBefore="Rp"
+                          addonAfter="/ Jam"
+                          placeholder="input placeholder"
+                          style={{ width: "100%" }}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
                         name="juniorProgrammer"
                         label="Junior Programmer"
                       >
@@ -108,11 +141,24 @@ export const FormInput = ({ onGenerate }) => {
                         />
                       </Form.Item>
                     </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="ratejuniorProgrammer"
+                        label="Rate Junior Programmer"
+                      >
+                        <InputNumber
+                          addonBefore="Rp"
+                          addonAfter="/ Jam"
+                          placeholder="input placeholder"
+                          style={{ width: "100%" }}
+                        />
+                      </Form.Item>
+                    </Col>
                   </Row>
                   <Form.Item name="startDate" label="Start Date">
                     <DatePicker style={{ width: "100%" }} />
                   </Form.Item>
-                  <Form.Item name="duration" label="Rencana Durasi Projek">
+                  <Form.Item name="duration" label="Durasi Pengembangan">
                     <InputNumber
                       addonAfter="Bulan"
                       placeholder="dalam bulan"
