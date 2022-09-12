@@ -150,11 +150,27 @@ export default function GanttMin({ cellHeight, borders }) {
   function onGenerate(value) {
     const { isExport, loopTimes } = value;
     if (isExport) {
+      const time = new Date().getTime();
       Array(loopTimes)
         .fill(0)
         .forEach((_val, index) => {
-          const { arrivalDisribution, taskDistribution } = generateTask(value);
-          const time = new Date().getTime();
+          const { arrivalDisribution, taskDistribution, workers, gantt } =
+            generateTask(value);
+
+          const workerDistribution = workers.map((programmer) => {
+            const task = programmer.task.map((task) => {
+              return {
+                ...task,
+                name: programmer.name,
+              };
+            });
+            return task;
+          });
+
+          const programmerDistribution = workerDistribution
+            .flat()
+            .sort((a, b) => a.index - b.index);
+
           const numpad = pad(index + 1, `${loopTimes}`.length);
           csvDownload(
             taskDistribution,
@@ -163,6 +179,13 @@ export default function GanttMin({ cellHeight, borders }) {
           csvDownload(
             arrivalDisribution,
             `arrival-distribution-${numpad}-${time}.csv`
+          );
+
+          csvDownload(gantt, `timeline-${numpad}-${time}.csv`);
+
+          csvDownload(
+            programmerDistribution,
+            `programmer-distribution-${numpad}-${time}.csv`
           );
         });
     } else {
