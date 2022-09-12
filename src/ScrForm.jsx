@@ -4,6 +4,7 @@ import {
   Card,
   Form,
   InputNumber,
+  Input,
   DatePicker,
   Button,
   Tabs,
@@ -78,6 +79,8 @@ export const FormInput = ({ onGenerate }) => {
           juniorProgrammer: 1,
           startDate: moment(),
           duration: 2,
+          loopTimes: 5,
+          isExport: false,
           dns,
           dms,
           rns,
@@ -169,8 +172,27 @@ export const FormInput = ({ onGenerate }) => {
                     <Slider marks={marks} max={2} min={-2} />
                   </Form.Item>
                   <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        form.setFieldsValue({
+                          isExport: false,
+                        });
+                        form.submit();
+                      }}
+                    >
                       Generate
+                    </Button>
+                    <Button
+                      style={{ margin: "0 8px" }}
+                      onClick={() => {
+                        form.setFieldsValue({
+                          isExport: true,
+                        });
+                        form.submit();
+                      }}
+                    >
+                      Export
                     </Button>
                   </Form.Item>
                 </Col>
@@ -291,6 +313,23 @@ export const FormInput = ({ onGenerate }) => {
                   </Form.Item>
                   <Form.Item name="taskM" label="Task M">
                     <InputNumber
+                      placeholder="input placeholder"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item>
+                    <h2>Simulasi</h2>
+                  </Form.Item>
+                  <Form.Item name="loopTimes" label="Total Sample">
+                    <InputNumber
+                      placeholder="input placeholder"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                  <Form.Item name="isExport" label="Export Data" hidden={true}>
+                    <Input
                       placeholder="input placeholder"
                       style={{ width: "100%" }}
                     />

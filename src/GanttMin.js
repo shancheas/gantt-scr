@@ -7,6 +7,8 @@ import { getData } from "./common/data";
 import { generateTask } from "./formula/new-scr";
 import { FormInput } from "./ScrForm";
 
+import csvDownload from "json-to-csv-export";
+
 const { TabPane } = Tabs;
 
 const tableColumns = [
@@ -139,22 +141,47 @@ export default function GanttMin({ cellHeight, borders }) {
 
   const ganttRef = useRef();
 
+  function pad(n, width, z) {
+    z = z || "0";
+    n = n + "";
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  }
+
   function onGenerate(value) {
-    const {
-      gantt,
-      workers,
-      summary,
-      summaryWorker,
-      arrivalDisribution,
-      taskDistribution,
-    } = generateTask(value);
-    setGantt(gantt);
-    setWorkers(workers);
-    setSummary(summary);
-    setProgrammer(summaryWorker);
-    setArrival(arrivalDisribution);
-    setTaskDistribution(taskDistribution);
-    ganttRef.current.forceUpdate();
+    const { isExport, loopTimes } = value;
+    if (isExport) {
+      Array(loopTimes)
+        .fill(0)
+        .forEach((_val, index) => {
+          const { arrivalDisribution, taskDistribution } = generateTask(value);
+          const time = new Date().getTime();
+          const numpad = pad(index + 1, `${loopTimes}`.length);
+          csvDownload(
+            taskDistribution,
+            `task-distribution-${numpad}-${time}.csv`
+          );
+          csvDownload(
+            arrivalDisribution,
+            `arrival-distribution-${numpad}-${time}.csv`
+          );
+        });
+    } else {
+      const {
+        gantt,
+        workers,
+        summary,
+        summaryWorker,
+        arrivalDisribution,
+        taskDistribution,
+      } = generateTask(value);
+      setGantt(gantt);
+      setWorkers(workers);
+      setSummary(summary);
+      setProgrammer(summaryWorker);
+      setArrival(arrivalDisribution);
+      setTaskDistribution(taskDistribution);
+      ganttRef.current.forceUpdate();
+    }
   }
 
   function hoursToMonth(hours) {
