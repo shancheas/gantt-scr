@@ -141,12 +141,6 @@ export default function GanttMin({ cellHeight, borders }) {
 
   const ganttRef = useRef();
 
-  function pad(n, width, z) {
-    z = z || "0";
-    n = n + "";
-    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-  }
-
   function round2digit(num) {
     return Math.round(num * 100) / 100;
   }
@@ -232,7 +226,6 @@ export default function GanttMin({ cellHeight, borders }) {
           timelines.push(ganttMap);
         });
 
-      // const numpad = pad(index + 1, `${loopTimes}`.length);
       csvDownload(tasks.flat(), `task-distribution-${time}.csv`);
       csvDownload(arrivals.flat(), `arrival-distribution-${time}.csv`);
       csvDownload(timelines.flat(), `timeline-${time}.csv`);
