@@ -147,6 +147,10 @@ export default function GanttMin({ cellHeight, borders }) {
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
+  function round2digit(num) {
+    return Math.round(num * 100) / 100;
+  }
+
   function onGenerate(value) {
     const { isExport, loopTimes } = value;
     if (isExport) {
@@ -159,12 +163,49 @@ export default function GanttMin({ cellHeight, borders }) {
 
           const workerDistribution = workers.map((programmer) => {
             const task = programmer.task.map((task) => {
+              const taskArrival = round2digit(task.taskArrival);
+              const start = round2digit(task.start);
+              const end = round2digit(task.end);
+              const queue = round2digit(task.queue);
+              const durationProcess = round2digit(task.durationProcess);
+
               return {
                 ...task,
+                taskArrival,
+                start,
+                end,
+                queue,
+                durationProcess,
                 name: programmer.name,
               };
             });
             return task;
+          });
+
+          const ganttMap = gantt.map((g) => {
+            const taskArrival = round2digit(g.taskArrival);
+            const start = round2digit(g.start);
+            const end = round2digit(g.end);
+            const durationProcess = round2digit(g.durationProcess);
+            return {
+              ...g,
+              taskArrival,
+              start,
+              end,
+              durationProcess,
+            };
+          });
+
+          const arrivalMap = arrivalDisribution.map((g) => {
+            const taskArrival = round2digit(g.taskArrival);
+            const scrArrive = round2digit(g.scrArrive);
+            const arrive = round2digit(g.arrive);
+            return {
+              ...g,
+              taskArrival,
+              scrArrive,
+              arrive,
+            };
           });
 
           const programmerDistribution = workerDistribution
@@ -176,12 +217,9 @@ export default function GanttMin({ cellHeight, borders }) {
             taskDistribution,
             `task-distribution-${numpad}-${time}.csv`
           );
-          csvDownload(
-            arrivalDisribution,
-            `arrival-distribution-${numpad}-${time}.csv`
-          );
+          csvDownload(arrivalMap, `arrival-distribution-${numpad}-${time}.csv`);
 
-          csvDownload(gantt, `timeline-${numpad}-${time}.csv`);
+          csvDownload(ganttMap, `timeline-${numpad}-${time}.csv`);
 
           csvDownload(
             programmerDistribution,
