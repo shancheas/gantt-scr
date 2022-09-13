@@ -155,6 +155,10 @@ export default function GanttMin({ cellHeight, borders }) {
     const { isExport, loopTimes } = value;
     if (isExport) {
       const time = new Date().getTime();
+      const tasks = [];
+      const arrivals = [];
+      const programmers = [];
+      const timelines = [];
       Array(loopTimes)
         .fill(0)
         .forEach((_val, index) => {
@@ -170,6 +174,7 @@ export default function GanttMin({ cellHeight, borders }) {
               const durationProcess = round2digit(task.durationProcess);
 
               return {
+                sample: index + 1,
                 ...task,
                 taskArrival,
                 start,
@@ -188,6 +193,7 @@ export default function GanttMin({ cellHeight, borders }) {
             const end = round2digit(g.end);
             const durationProcess = round2digit(g.durationProcess);
             return {
+              sample: index + 1,
               ...g,
               taskArrival,
               start,
@@ -201,6 +207,7 @@ export default function GanttMin({ cellHeight, borders }) {
             const scrArrive = round2digit(g.scrArrive);
             const arrive = round2digit(g.arrive);
             return {
+              sample: index + 1,
               ...g,
               taskArrival,
               scrArrive,
@@ -208,24 +215,28 @@ export default function GanttMin({ cellHeight, borders }) {
             };
           });
 
+          const taskMap = taskDistribution.map((task) => {
+            return {
+              sample: index + 1,
+              ...task,
+            };
+          });
+
           const programmerDistribution = workerDistribution
             .flat()
             .sort((a, b) => a.index - b.index);
 
-          const numpad = pad(index + 1, `${loopTimes}`.length);
-          csvDownload(
-            taskDistribution,
-            `task-distribution-${numpad}-${time}.csv`
-          );
-          csvDownload(arrivalMap, `arrival-distribution-${numpad}-${time}.csv`);
-
-          csvDownload(ganttMap, `timeline-${numpad}-${time}.csv`);
-
-          csvDownload(
-            programmerDistribution,
-            `programmer-distribution-${numpad}-${time}.csv`
-          );
+          tasks.push(taskMap);
+          arrivals.push(arrivalMap);
+          programmers.push(programmerDistribution);
+          timelines.push(ganttMap);
         });
+
+      // const numpad = pad(index + 1, `${loopTimes}`.length);
+      csvDownload(tasks.flat(), `task-distribution-${time}.csv`);
+      csvDownload(arrivals.flat(), `arrival-distribution-${time}.csv`);
+      csvDownload(timelines.flat(), `timeline-${time}.csv`);
+      csvDownload(programmers.flat(), `programmer-distribution-${time}.csv`);
     } else {
       const {
         gantt,
