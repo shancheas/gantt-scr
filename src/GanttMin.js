@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import moment from "moment";
 import { Row, Col, Descriptions, Tabs, Table } from "antd";
 import Gantt from "./components/Gantt";
 import Toolbar from "./components/Toolbar";
@@ -148,16 +149,22 @@ export default function GanttMin({ cellHeight, borders }) {
   function onGenerate(value) {
     const { isExport, loopTimes } = value;
     if (isExport) {
-      const time = new Date().getTime();
+      const time = moment().format("YYYY-MM-DD_HHmmss");
       const tasks = [];
       const arrivals = [];
       const programmers = [];
       const timelines = [];
+      const summaries = [];
       Array(loopTimes)
         .fill(0)
         .forEach((_val, index) => {
-          const { arrivalDisribution, taskDistribution, workers, gantt } =
-            generateTask(value);
+          const {
+            arrivalDisribution,
+            taskDistribution,
+            workers,
+            gantt,
+            summary,
+          } = generateTask(value);
 
           const workerDistribution = workers.map((programmer) => {
             const task = programmer.task.map((task) => {
@@ -216,6 +223,11 @@ export default function GanttMin({ cellHeight, borders }) {
             };
           });
 
+          const summaryMap = {
+            sample: index + 1,
+            ...summary,
+          };
+
           const programmerDistribution = workerDistribution
             .flat()
             .sort((a, b) => a.index - b.index);
@@ -224,12 +236,14 @@ export default function GanttMin({ cellHeight, borders }) {
           arrivals.push(arrivalMap);
           programmers.push(programmerDistribution);
           timelines.push(ganttMap);
+          summaries.push(summaryMap);
         });
 
       csvDownload(tasks.flat(), `task-distribution-${time}.csv`);
       csvDownload(arrivals.flat(), `arrival-distribution-${time}.csv`);
       csvDownload(timelines.flat(), `timeline-${time}.csv`);
       csvDownload(programmers.flat(), `programmer-distribution-${time}.csv`);
+      csvDownload(summaries.flat(), `summary-${time}.csv`);
     } else {
       const {
         gantt,

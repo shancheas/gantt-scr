@@ -64,6 +64,13 @@ const marks = {
 export const FormInput = ({ onGenerate }) => {
   const [form] = Form.useForm();
 
+  function durationRange(durationName, tolerance) {
+    const duration = form.getFieldValue(durationName);
+    const time = duration + tolerance;
+
+    return time > duration ? `${duration} - ${time}` : `${time} - ${duration}`;
+  }
+
   return (
     <div style={{ margin: 16 }}>
       <Form
@@ -200,143 +207,178 @@ export const FormInput = ({ onGenerate }) => {
             </Card>
           </TabPane>
           <TabPane tab="CONFIGURATION " key="2" forceRender>
-            <Card>
-              <Row gutter={16}>
-                <Col span={6}>
-                  <Form.Item>
-                    <h2>Durasi</h2>
-                  </Form.Item>
-                  <Form.Item name="dns" label="Durasi New Senior (Dns)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="dms" label="Durasi Modif Senior (Dms)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="dnj" label="Durasi New Junior (Dnj)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="dmj" label="Durasi Modif Junior (Dmj)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={6}>
-                  <Form.Item>
-                    <h2>Peluang Rework</h2>
-                  </Form.Item>
-                  <Form.Item name="rnj" label="Rework New Junior (Pnj)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="rmj" label="Rework Modif Junior (Pmj)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="rns" label="Rework New Senior (Pns)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="rms" label="Rework Modif Senior (Pms)">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={6}>
-                  <Form.Item>
-                    <h2>Distribusi Kedatangan SCR</h2>
-                  </Form.Item>
-                  <Form.Item name="arrivalA" label="Arrival A">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="arrivalC" label="Arrival C">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="arrivalM" label="Arrival M">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="interarrival" label="Inter Arrival">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="threshold" label="Pnm">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={6}>
-                  <Form.Item>
-                    <h2>Distribusi Penugasan</h2>
-                  </Form.Item>
-                  <Form.Item name="taskA" label="Task A">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="taskC" label="Task C">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="taskM" label="Task M">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={6}>
-                  <Form.Item>
-                    <h2>Simulasi</h2>
-                  </Form.Item>
-                  <Form.Item name="loopTimes" label="Total Sample">
-                    <InputNumber
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                  <Form.Item name="isExport" label="Export Data" hidden={true}>
-                    <Input
-                      placeholder="input placeholder"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Card>
+            <Form.Item shouldUpdate noStyle>
+              {({ getFieldValue }) => {
+                const complexity = getFieldValue("taskTimeTolerance");
+                return (
+                  <Card>
+                    <Row gutter={16}>
+                      <Col span={6}>
+                        <Form.Item>
+                          <h2>Durasi</h2>
+                        </Form.Item>
+                        <Form.Item
+                          name="dns"
+                          label={`Durasi New Senior (Dns) (${durationRange(
+                            "dns",
+                            complexity
+                          )})`}
+                        >
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="dms"
+                          label={`Durasi Modif Senior (Dms) (${durationRange(
+                            "dms",
+                            complexity
+                          )})`}
+                        >
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="dnj"
+                          label={`Durasi New Junior (Dnj) (${durationRange(
+                            "dnj",
+                            complexity
+                          )})`}
+                        >
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="dmj"
+                          label={`Durasi Modif Junior (Dmj) (${durationRange(
+                            "dmj",
+                            complexity
+                          )})`}
+                        >
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item>
+                          <h2>Peluang Rework</h2>
+                        </Form.Item>
+                        <Form.Item name="rnj" label="Rework New Junior (Pnj)">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="rmj" label="Rework Modif Junior (Pmj)">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="rns" label="Rework New Senior (Pns)">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="rms" label="Rework Modif Senior (Pms)">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item>
+                          <h2>Distribusi Kedatangan SCR</h2>
+                        </Form.Item>
+                        <Form.Item name="arrivalA" label="Arrival A">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="arrivalC" label="Arrival C">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="arrivalM" label="Arrival M">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="interarrival" label="Inter Arrival">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="threshold" label="Pnm">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item>
+                          <h2>Distribusi Penugasan</h2>
+                        </Form.Item>
+                        <Form.Item name="taskA" label="Task A">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="taskC" label="Task C">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item name="taskM" label="Task M">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item>
+                          <h2>Simulasi</h2>
+                        </Form.Item>
+                        <Form.Item name="loopTimes" label="Total Sample">
+                          <InputNumber
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="isExport"
+                          label="Export Data"
+                          hidden={true}
+                        >
+                          <Input
+                            placeholder="input placeholder"
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
+                );
+              }}
+            </Form.Item>
           </TabPane>
         </Tabs>
       </Form>
