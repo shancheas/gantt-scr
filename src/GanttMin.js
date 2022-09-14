@@ -225,9 +225,9 @@ export default function GanttMin({ cellHeight, borders }) {
 
           const summaryMap = {
             sample: index + 1,
+            ...summary,
             cost: round2digit(summary.cost),
             hours: round2digit(summary.hours),
-            ...summary,
           };
 
           const programmerDistribution = workerDistribution
