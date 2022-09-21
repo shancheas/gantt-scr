@@ -241,24 +241,31 @@ export default function GanttMin({ cellHeight, borders }) {
           summaries.push(summaryMap);
         });
 
+      const exportObject = {
+        exportTask: {
+          value: tasks,
+          name: "task-distribution",
+        },
+        exportArrival: {
+          value: arrivals,
+          name: "arrival-distribution",
+        },
+        exportTimeline: {
+          value: timelines,
+          name: "timeline",
+        },
+        exportProgrammer: {
+          value: programmers,
+          name: "programmer-distribution",
+        },
+        exportSummary: {
+          value: summaries,
+          name: "summary",
+        },
+      };
       for (const exportFile of checkboxExport) {
-        if (exportFile === "exportTask")
-          csvDownload(tasks.flat(), `task-distribution-${time}.csv`);
-
-        if (exportFile === "exportArrival")
-          csvDownload(arrivals.flat(), `arrival-distribution-${time}.csv`);
-
-        if (exportFile === "exportTimeline")
-          csvDownload(timelines.flat(), `timeline-${time}.csv`);
-
-        if (exportFile === "exportProgrammer")
-          csvDownload(
-            programmers.flat(),
-            `programmer-distribution-${time}.csv`
-          );
-
-        if (exportFile === "exportSummary")
-          csvDownload(summaries.flat(), `summary-${time}.csv`);
+        const { value, name } = exportObject[exportFile];
+        csvDownload(value.flat(), `${name}-${time}.csv`);
       }
     } else {
       const {
