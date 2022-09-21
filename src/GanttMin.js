@@ -147,7 +147,7 @@ export default function GanttMin({ cellHeight, borders }) {
   }
 
   function onGenerate(value) {
-    const { isExport, loopTimes } = value;
+    const { isExport, loopTimes, checkboxExport } = value;
     if (isExport) {
       const time = moment().format("YYYY-MM-DD_HHmmss");
       const tasks = [];
@@ -241,11 +241,25 @@ export default function GanttMin({ cellHeight, borders }) {
           summaries.push(summaryMap);
         });
 
-      csvDownload(tasks.flat(), `task-distribution-${time}.csv`);
-      csvDownload(arrivals.flat(), `arrival-distribution-${time}.csv`);
-      csvDownload(timelines.flat(), `timeline-${time}.csv`);
-      csvDownload(programmers.flat(), `programmer-distribution-${time}.csv`);
-      csvDownload(summaries.flat(), `summary-${time}.csv`);
+      for (const exportFile of checkboxExport) {
+        if (exportFile === "exportTask")
+          csvDownload(tasks.flat(), `task-distribution-${time}.csv`);
+
+        if (exportFile === "exportArrival")
+          csvDownload(arrivals.flat(), `arrival-distribution-${time}.csv`);
+
+        if (exportFile === "exportTimeline")
+          csvDownload(timelines.flat(), `timeline-${time}.csv`);
+
+        if (exportFile === "exportProgrammer")
+          csvDownload(
+            programmers.flat(),
+            `programmer-distribution-${time}.csv`
+          );
+
+        if (exportFile === "exportSummary")
+          csvDownload(summaries.flat(), `summary-${time}.csv`);
+      }
     } else {
       const {
         gantt,

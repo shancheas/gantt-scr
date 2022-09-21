@@ -10,6 +10,7 @@ import {
   Tabs,
   Slider,
   Tooltip,
+  Checkbox,
   // Divider,
 } from "antd";
 import moment from "moment";
@@ -87,6 +88,13 @@ export const FormInput = ({ onGenerate }) => {
           startDate: moment(),
           duration: 2,
           loopTimes: 5,
+          checkboxExport: [
+            "exportTask",
+            "exportTimeline",
+            "exportArrival",
+            "exportSummary",
+            "exportProgrammer",
+          ],
           isExport: false,
           dns,
           dms,
@@ -362,6 +370,52 @@ export const FormInput = ({ onGenerate }) => {
                             placeholder="input placeholder"
                             style={{ width: "100%" }}
                           />
+                        </Form.Item>
+                        <Form.Item name="checkboxExport" label="Export">
+                          <Checkbox.Group>
+                            <Row>
+                              <Col span={8}>
+                                <Checkbox
+                                  value="exportSummary"
+                                  style={{ lineHeight: "32px" }}
+                                >
+                                  Summary
+                                </Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox
+                                  value="exportTimeline"
+                                  style={{ lineHeight: "32px" }}
+                                >
+                                  Timelines
+                                </Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox
+                                  value="exportTask"
+                                  style={{ lineHeight: "32px" }}
+                                >
+                                  Task Distribution
+                                </Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox
+                                  value="exportArrival"
+                                  style={{ lineHeight: "32px" }}
+                                >
+                                  Arrival Distribution
+                                </Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox
+                                  value="exportProgrammer"
+                                  style={{ lineHeight: "32px" }}
+                                >
+                                  Programmer Distribution
+                                </Checkbox>
+                              </Col>
+                            </Row>
+                          </Checkbox.Group>
                         </Form.Item>
                         <Form.Item
                           name="isExport"
