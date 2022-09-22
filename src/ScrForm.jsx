@@ -176,7 +176,10 @@ export const FormInput = ({ onGenerate }) => {
                   <Form.Item name="startDate" label="Start Date">
                     <DatePicker style={{ width: "100%" }} />
                   </Form.Item>
-                  <Form.Item name="duration" label="Durasi Pengembangan">
+                  <Form.Item
+                    name="duration"
+                    label="Rencana Durasi Pengembangan"
+                  >
                     <InputNumber
                       addonAfter="Bulan"
                       placeholder="dalam bulan"
@@ -365,7 +368,7 @@ export const FormInput = ({ onGenerate }) => {
                         <Form.Item>
                           <h2>Simulasi</h2>
                         </Form.Item>
-                        <Form.Item name="loopTimes" label="Total Sample">
+                        <Form.Item name="loopTimes" label="Jumlah Generate">
                           <InputNumber
                             placeholder="input placeholder"
                             style={{ width: "100%" }}
